@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    tools:context=".EffectsActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/effects_layout"
+        android:visibility="visible"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/merged_image"
+            android:layout_width="match_parent"
+            android:layout_height="441dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/effects_list"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/recycler_size"
+                android:clipToPadding="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cancel_button"
+                    android:padding="12dp"
+                    android:background="@color/colorTransparent"
+                    android:src="@drawable/ic_cancel"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/crop_button"
+                    android:background="@color/colorTransparent"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_crop"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/straighten_button"
+                    android:background="@color/colorTransparent"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_straighten"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_image"
+                    android:background="@color/colorTransparent"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_edit_black"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/save_button"
+                    android:padding="12dp"
+                    android:background="@color/colorTransparent"
+                    android:src="@drawable/ic_done"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/crop_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <com.theartofdev.edmodo.cropper.CropImageView
+            android:id="@+id/crop_view"
+            android:layout_width="match_parent"
+            android:layout_height="537dp"
+            android:layout_below="@+id/crop_controls"
+            android:scaleType="center"
+            app:cropAutoZoomEnabled="true"
+            app:cropFixAspectRatio="true"
+            app:cropGuidelines="on"
+            app:cropMultiTouchEnabled="true"
+            app:cropShape="rectangle">
+
+        </com.theartofdev.edmodo.cropper.CropImageView>
+
+        <LinearLayout
+            android:id="@+id/crop_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/crop_cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:background="@color/colorTransparent"
+                android:padding="12dp"
+                android:src="@drawable/ic_cancel" />
+            <ImageButton
+                android:id="@+id/rotate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="@color/colorTransparent"
+            android:padding="12dp"
+            android:src="@drawable/ic_rotate" />
+            <ImageButton
+                android:id="@+id/crop_saveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:background="@color/colorTransparent"
+                android:padding="12dp"
+                android:src="@drawable/ic_done" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/drawLayout"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+        <ja.burhanrashid52.photoeditor.PhotoEditorView
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/photo_editor_view" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/straighten_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/straighten_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_centerVertical="true"
+            android:scaleType="matrix" />
+
+        <SeekBar
+            android:id="@+id/straighten"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/straighten_image_view"
+            android:max="90"
+            android:progress="45" />
+        <LinearLayout
+            android:id="@+id/straighten_controls"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/straighten_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:background="@color/colorTransparent"
+                android:padding="12dp"
+                android:src="@drawable/ic_cancel" />
+
+            <ImageButton
+                android:id="@+id/straighten_saveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:background="@color/colorTransparent"
+                android:padding="12dp"
+                android:src="@drawable/ic_done" />
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="2dp"
+    android:elevation="3dp"
+    android:layout_marginLeft="40dp"
+    android:layout_marginRight="40dp"
+    android:layout_height="wrap_content">
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/front"
+        android:text="Front Camera"
+        android:padding="5dp"
+        android:background="#353b48"
+        android:textColor="#f5f6fa"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/rear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Rear Camera"
+        android:background="#353b48"
+        android:textColor="#f5f6fa"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="48dp" />
+</LinearLayout>

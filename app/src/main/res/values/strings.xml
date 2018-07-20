@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DuelShots</string>
+
+    <string name="title_activity_save">SaveActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="effects">Effects</string>
+    <string name="save">Save</string>
+    <string name="title">Discard Changes?</string>
+    <string name="positive_title">Discard</string>
+    <string name="negative_title">Cancel</string>
+    <string name="main_action_rotate">Rotate 90 degrees clockwise</string>
+    <string name="main_action_flip">Flip</string>
+    <string name="main_action_flip_horizontally">Flip Horizontally</string>
+    <string name="main_action_flip_vertically">Flip Vertically</string>
+</resources>

@@ -1,4 +1,4 @@
-package com.begn.duelshots;
+package com.begn.duelshots.imageEditor;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,8 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.begn.duelshots.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.ViewHolder> {

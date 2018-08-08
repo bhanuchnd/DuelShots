@@ -15,10 +15,9 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -42,13 +41,7 @@ import com.begn.duelshots.utilities.CameraPreview;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -310,80 +303,59 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     private void byteToBitmap(byte[] blob,int type)  {
+        Log.d("Model", Build.MODEL + " - " + Build.MODEL.contains("Mi A1"));
+        Bitmap   bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(blob,0,blob.length),mPreview.mPictureSize.width,mPreview.mPictureSize.height,false);
         if(type == 1) {
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                Bitmap   bitmap = BitmapFactory.decodeByteArray(blob, 0, blob.length);
-//                ExifInterface exifInterface = null;
-//                try {
-//                    exifInterface = new ExifInterface(new ByteArrayInputStream(blob));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-//                switch(orientation) {
-//                    case 90:
-//                        frontImageBitmap= rotateImage(bitmap, 90);
-//                        break;
-//                    case 180:
-//                        frontImageBitmap= rotateImage(bitmap, 180);
-//                        break;
-//                    case 270:
-//                        frontImageBitmap= rotateImage(bitmap, 270);
-//                        break;
-//                    case 0:
-//                        frontImageBitmap = bitmap;
-//                        // if orientation is zero we don't need to rotate this
-//                    default:
-//                        break;
-//                }
-//            } else
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && Build.MODEL.contains("Mi A1")) {
+                ExifInterface exifInterface = null;
+                try {
+                    exifInterface = new ExifInterface(new ByteArrayInputStream(blob));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("EXIF value", exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
+                if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
+
+                    frontImageBitmap=rotateImage(bitmap, 90);
+                }else if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
+                    frontImageBitmap=rotateImage(bitmap, 270);
+                }else if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
+                    frontImageBitmap=rotateImage(bitmap, 270);
+                } else
+                    frontImageBitmap=rotateImage(bitmap, 0);
+            } else
                 frontImageBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(blob,0,blob.length),mPreview.mPictureSize.width,mPreview.mPictureSize.height,false);
         } else {
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                ExifInterface exifInterface = null;
-//                try {
-//                    exifInterface = new ExifInterface(new ByteArrayInputStream(blob));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-//                Bitmap   bitmap = BitmapFactory.decodeByteArray(blob, 0, blob.length);
-//                switch(orientation) {
-//                    case 90:
-//                        backImageBitmap= rotateImage(bitmap, 90);
-//                        break;
-//                    case 180:
-//                        backImageBitmap= rotateImage(bitmap, 180);
-//                        break;
-//                    case 270:
-//                        backImageBitmap= rotateImage(bitmap, 270);
-//                        break;
-//                    case 0:
-//                        backImageBitmap = bitmap;
-//                        // if orientation is zero we don't need to rotate this
-//                    default:
-//                        break;
-//                }
-//            } else
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && Build.MODEL.contains("Mi A1")) {
+
+                ExifInterface exifInterface = null;
+                try {
+                    exifInterface = new ExifInterface(new ByteArrayInputStream(blob));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("EXIF value", exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
+                if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
+
+                    backImageBitmap=rotateImage(bitmap, 90);
+                }else if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
+                    backImageBitmap=rotateImage(bitmap, 270);
+                }else if(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
+                    backImageBitmap=rotateImage(bitmap, 180);
+                } else
+                    backImageBitmap=rotateImage(bitmap, 90);
+            } else
                 backImageBitmap =  Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(blob,0,blob.length),mPreview.mPictureSize.width,mPreview.mPictureSize.height,false);
-
-
-//
         }
     }
-    public static Bitmap rotateImage(Bitmap source, float angle) {
+    public Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        Log.d("Picture size ", "Width "+ mPreview.mPictureSize.width + " Height- " + mPreview.mPictureSize.height);
+        return Bitmap.createBitmap(source, 0, 0, mPreview.mPictureSize.width ,mPreview.mPictureSize.height, matrix, true);
     }
-//    private Camera.PictureCallback mPicture2 = new Camera.PictureCallback() {
-//
-//        @Override
-//        public void onPictureTaken(byte[] data, Camera camera) {
-//
-//
-//        }
-//    };
+
     private Bitmap createSingleImageFromMultipleImages(Bitmap firstImage, Bitmap secondImage) {
         Bitmap result = Bitmap.createBitmap(mPreview.mPictureSize.width, mPreview.mPictureSize.height * 2, firstImage.getConfig());
         Canvas canvas = new Canvas(result);

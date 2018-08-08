@@ -135,16 +135,6 @@
         </LinearLayout>
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/drawLayout"
-        android:visibility="gone"
-        android:layout_height="match_parent">
-        <ja.burhanrashid52.photoeditor.PhotoEditorView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:id="@+id/photo_editor_view" />
-    </RelativeLayout>
-    <RelativeLayout
         android:id="@+id/straighten_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

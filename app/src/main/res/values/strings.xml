@@ -7,6 +7,9 @@
     <string name="effects">Effects</string>
     <string name="save">Save</string>
     <string name="title">Discard Changes?</string>
+    <string name="label_brush">Brush</string>
+    <string name="label_text">Text</string>
+    <string name="label_eraser">Eraser</string>
     <string name="positive_title">Discard</string>
     <string name="negative_title">Cancel</string>
     <string name="main_action_rotate">Rotate 90 degrees clockwise</string>

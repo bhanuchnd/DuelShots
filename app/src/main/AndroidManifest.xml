@@ -20,6 +20,7 @@
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
         <activity android:name=".EffectsActivity" />
+        <activity android:name=".burhanrashid52.imageEditor.EditImageActivity"/>
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

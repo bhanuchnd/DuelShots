@@ -1,6 +1,5 @@
 package com.begn.duelshots;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.renderscript.Allocation;
@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.begn.duelshots.imageEditor.EditImageActivity;
 import com.begn.duelshots.thumnails.ThumbnailCallback;
 import com.begn.duelshots.thumnails.ThumbnailItem;
 import com.begn.duelshots.thumnails.ThumbnailsAdapter;
@@ -52,8 +53,6 @@ import java.util.Date;
 import java.util.List;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
-import ja.burhanrashid52.photoeditor.PhotoEditor;
-import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.ViewType;
 
 
@@ -69,16 +68,17 @@ public class EffectsActivity extends AppCompatActivity
     private ImageView mergedImage, straightenImageView;
     private Activity activity;
     RecyclerView effectsList;
-    Bitmap mergedBitmap;
+    public static Bitmap mergedBitmap;
     private CropImageView cropImageView;
     private SeekBar seekBar;
     private Matrix mMatrix;
-    private PhotoEditorView photoEditorView;
-    private PhotoEditor mPhotoEditor;
+    private static String imagePath;
+    private static boolean isEdited = false;
     private static boolean effectAdded = false;
     Bitmap straightenBitmap;
     ImageButton saveButton, cancelButton,
             cropButton,cropCancel,cropSave,
+            editImageButton,
             rotate,straightenButton,straightenSaveButton, straightenCancelButton;
     private static final float BLUR_RADIUS = 25f;
     private RelativeLayout effectsLayout, cropLayout,straightenLayout;
@@ -108,16 +108,16 @@ public class EffectsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_effects);setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_effects);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = this;
-        mergedBitmap = MainActivity.mergedBitmap;
-        photoEditorView = findViewById(R.id.photo_editor_view);
-        photoEditorView.getSource().setImageBitmap(mergedBitmap);
-        mPhotoEditor = new PhotoEditor.Builder(this,photoEditorView)
-                .setPinchTextScalable(true)
-                .build();
-        mPhotoEditor.setBrushDrawingMode(true);
+        if(getIntent().getExtras() != null) {
+            isEdited = getIntent().getExtras().getBoolean("isEdited");
+            imagePath = getIntent().getExtras().getString("editedImage");
+        }
 
+
+        mergedBitmap = MainActivity.mergedBitmap;
 
 //        actionBar = getSupportActionBar();
 //        actionBar.hide();
@@ -128,13 +128,19 @@ public class EffectsActivity extends AppCompatActivity
         cropImageView = findViewById(R.id.crop_view);
         cropImageView.setAspectRatio(mergedBitmap.getWidth(),mergedBitmap.getHeight());
         mergedImage = findViewById(R.id.merged_image);
-        mergedImage.setImageBitmap(mergedBitmap);
+        if(isEdited) {
+            mergedImage.setImageURI(Uri.fromFile(new File(imagePath)));
+            mergedBitmap = ((BitmapDrawable) mergedImage.getDrawable()).getBitmap();
+        } else {
+            mergedImage.setImageBitmap(mergedBitmap);
+        }
         effectsList = findViewById(R.id.effects_list);
         saveButton = findViewById(R.id.save_button);
         cancelButton = findViewById(R.id.cancel_button);
         cropCancel = findViewById(R.id.crop_cancelButton);
         straightenCancelButton = findViewById(R.id.straighten_cancel);
         straightenSaveButton = findViewById(R.id.straighten_saveButton);
+        editImageButton = findViewById(R.id.edit_image);
         cropSave = findViewById(R.id.crop_saveButton);
         cropButton = findViewById(R.id.crop_button);
         rotate = findViewById(R.id.rotate);
@@ -142,6 +148,13 @@ public class EffectsActivity extends AppCompatActivity
         straightenButton = findViewById(R.id.straighten_button);
         straightenImageView = findViewById(R.id.straighten_image_view);
         straightenLayout = findViewById(R.id.straighten_layout);
+        editImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editImageIntent = new Intent(EffectsActivity.this,EditImageActivity.class);
+                startActivity(editImageIntent);
+            }
+        });
         rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,9 +297,15 @@ public class EffectsActivity extends AppCompatActivity
 
     }
     private void resetImage(DialogInterface dialog) {
-        if(effectAdded) {
+        if(effectAdded || isEdited) {
+            File imageFile = new File(imagePath);
+            imageFile.delete();
+            bindDataToAdapter();
+            effectAdded = false;
+            isEdited = false;
             mergedBitmap = MainActivity.mergedBitmap;
             mergedImage.setImageBitmap(mergedBitmap);
+
         } else {
             dialog.dismiss();
             onBackPressed();
@@ -343,7 +362,7 @@ public class EffectsActivity extends AppCompatActivity
     }
     private static File getOutputMediaFile(int type, int cameraFacing){
 
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "DuelShots");
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"duelShots");
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
                 Log.d("Directory", "failed to create directory");
@@ -356,6 +375,8 @@ public class EffectsActivity extends AppCompatActivity
         if (type == MEDIA_TYPE_IMAGE){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp+ ".jpg");
+            if(isEdited)
+                mediaFile = new File(imagePath);
         } else if(type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_"+ timeStamp + ".mp4");
